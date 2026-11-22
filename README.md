@@ -22,7 +22,9 @@ Performance also varied by hospital. Riverside Memorial improved from 94.1 to 60
 
 The analysis follows the DMAIC framework (Define, Measure, Analyze, Improve, Control), a Lean Six Sigma approach, providing a structured way to evaluate the product's impact and identify opportunities for continued improvement.
 
-![Dashboard: median turnaround fell 49 minutes, share read within 60 minutes rose 55 points, queue fell 50 minutes, adoption 86.2 percent; monthly trend steps down at the January 2025 go-live; Riverside lags the other two sites; prioritized cases are read 52 minutes faster](images/dashboard.png)
+
+[aidocdashboardgif.webm](https://github.com/user-attachments/assets/737b9375-ba28-4ce8-a690-101bc7b2d774)
+
 
 ## DMAIC
 
@@ -139,7 +141,7 @@ The Chief of Radiology should review the dashboard monthly, with particular atte
 
 ## SQL Queries
 
-All analysis queries are in the `sql/` folder. The key queries are reproduced below in collapsible blocks. Medians are calculated in Power BI from the row-level query results, except where noted.
+All analysis queries are in the `sql/` folder. The key queries are reproduced below in collapsible blocks. Some medians are calculated in Power BI from the row-level query results, except where noted.
 
 <details>
 <summary>Turnaround and queue (Queries 1 and 2)</summary>
@@ -430,39 +432,3 @@ ORDER BY stage DESC;
 ```
 
 </details>
-
-## Repository Structure
-
-```
-├── data/                  # 4 synthetic CSVs (sites, scans, ai_flags, reads)
-├── sql/
-│   ├── 1_median_scan_to_review_lifecycle-2.sql   # turnaround, row-level
-│   ├── 2_median_scan_to_read_start-2.sql         # queue, row-level
-│   ├── 3_read_within_60_min-2.sql                # share read within 60 min
-│   ├── 4_ai_flags_on_prioritization_list.sql     # adoption
-│   ├── 5_ai_processing_time.sql                  # AI processing time
-│   ├── 6_precision_and_sensitivity.sql           # precision and sensitivity
-│   ├── 8_flag_rate.sql                           # flag rate
-│   ├── 9_prioritized_vs_standard.sql             # mechanism test
-│   ├── 10_volumes.sql                            # volumes by stage
-│   └── 13_mechanism_test_2_flagged_vs_missed.sql # second mechanism test
-├── images/
-│   └── dashboard.png      # Power BI dashboard screenshot
-└── README.md
-```
-
-## Appendix: Additional Analysis
-
-The following analyses were run and are available for deeper review on request. They support the findings above but are not needed to answer the business question.
-
-**Performance by shift.** Night shifts experienced the longest pre-AI turnaround times and the largest improvement following implementation. Day improved from 78.5 to 42.5 minutes. Evening improved from 98.6 to 43.7 minutes. Night improved from 136.4 to 46.8 minutes. The improvement was consistent across all three shifts.
-
-**Performance by critical finding type.** All four finding types experienced substantial improvements. Intracranial hemorrhage improved from 91.7 to 42.9 minutes. Pulmonary embolism improved from 93.7 to 43.8 minutes. Cervical spine fracture improved from 91.8 to 48.4 minutes. Large vessel occlusion improved from 94.8 to 44.0 minutes. The benefit was not isolated to one particular category of critical finding.
-
-**Second mechanism test: flagged vs. missed critical scans.** Critical scans successfully identified by Aidoc (2,366 cases) experienced a median queue of 17.0 minutes and a median turnaround of 40.3 minutes. Missed critical scans (593 cases) experienced a median queue of 70.3 minutes and a median turnaround of 94.5 minutes. Being flagged is worth about 54 minutes. Missed cases look like the pre-AI baseline. Query: `sql/13_mechanism_test_2_flagged_vs_missed.sql`.
-
-**Placebo check: non-critical scans.** To determine whether the improvement simply reflected a general reduction in radiologist workload or faster operations across the network, non-critical scans were compared before and after implementation. Median turnaround time changed only slightly, from 92.8 minutes to 91.7 minutes. The limited movement suggests the improvement was concentrated among critical cases rather than representing a general reduction in turnaround times across all scans.
-
----
-
-*Note: precision and sensitivity were cut from the leadership dashboard page and are covered in the Analyze section above, with the 593 missed criticals flagged as the safety gap.*
